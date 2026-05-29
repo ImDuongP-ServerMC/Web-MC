@@ -414,6 +414,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (data && data.online) {
                 isServerOnline = true;
+                lastRealPing = rawVisitorPing; // Store for real-time ping updates
                 
                 serverStatus.textContent = "ONLINE";
                 serverStatus.classList.remove('loading', 'offline');
