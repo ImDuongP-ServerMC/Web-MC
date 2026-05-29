@@ -614,9 +614,9 @@ body {
 .status-desc {
     font-size: 0.88rem;
     color: var(--text-muted);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.4;
 }
 .status-desc strong {
     color: var(--text-white);

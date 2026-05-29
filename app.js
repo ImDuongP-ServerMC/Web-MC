@@ -553,7 +553,36 @@ document.addEventListener('DOMContentLoaded', () => {
         footerStatusText.textContent = `Server Status: OFFLINE`;
     };
 
-    // --- 10. TPS SIMULATION / TELEMETRY DECORATOR ---
+    // --- 11. REAL-TIME PING SYSTEM (updates every 1 second) ---
+    let lastRealPing = 0;
+    let pingHistory = [];
+    
+    const doRealPing = async () => {
+        if (!isServerOnline) return;
+        try {
+            const startTime = performance.now();
+            await fetch(`https://api.mcstatus.io/v2/status/java/${ipAddressText}`, {
+                cache: 'no-store',
+                headers: { 'Accept': 'application/json' }
+            });
+            const endTime = performance.now();
+            lastRealPing = Math.round(endTime - startTime);
+            pingHistory.push(lastRealPing);
+            if (pingHistory.length > 10) pingHistory.shift();
+        } catch (err) {
+            // Silently fail
+        }
+    };
+    
+    const updatePingLive = () => {
+        if (!isServerOnline || lastRealPing === 0) return;
+        // Small natural fluctuation around last real ping (±8%)
+        const jitter = Math.round((Math.random() - 0.5) * lastRealPing * 0.16);
+        const displayPing = Math.max(1, lastRealPing + jitter);
+        updateVisitorPingDisplay(displayPing);
+    };
+
+    // --- 12. TPS SIMULATION / TELEMETRY DECORATOR ---
     const startTpsTelemetry = () => {
         setInterval(() => {
             if (isServerOnline) {
@@ -575,6 +604,12 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchServerTelemetry();
     startTpsTelemetry();
     
-    // Auto-refresh telemetry dashboard every 30 seconds
+    // Full telemetry refresh every 30 seconds
     setInterval(fetchServerTelemetry, 30000);
+    
+    // Real API ping every 5 seconds
+    setInterval(doRealPing, 5000);
+    
+    // Visual ping update every 1 second (smooth live feel)
+    setInterval(updatePingLive, 1000);
 });
