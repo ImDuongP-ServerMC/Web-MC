@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ImDuongP SMP - Minecraft Survival Server</title>
+    <meta name="description" content="Trang chủ chính thức của ImDuongP SMP - Máy chủ Minecraft Sinh Tồn 1.20.4 mượt mà, hỗ trợ tài khoản cracked, kết nối ổn định 24/7!">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Nav Bar -->
+    <header class="navbar-container">
+        <nav class="navbar">
+            <a href="#" class="nav-logo">
+                <span class="logo-accent">ImDuongP</span> SMP
+            </a>
+            <ul class="nav-menu">
+                <li><a href="#hero" class="nav-link active"><i class="fa-solid fa-house"></i> Trang Chủ</a></li>
+                <li><a href="#status" class="nav-link"><i class="fa-solid fa-chart-line"></i> Trạng Thái</a></li>
+                <li><a href="#activities" class="nav-link"><i class="fa-solid fa-calendar-days"></i> Hoạt Động</a></li>
+                <li><a href="#rules" class="nav-link"><i class="fa-solid fa-scale-balanced"></i> Luật Lệ</a></li>
+            </ul>
+            <div class="nav-burger">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="hero-tagline"><i class="fa-solid fa-gamepad"></i> MINECRAFT SURVIVAL SERVER</span>
+            <h1 class="hero-title">ImDuongP <span class="glow-text">SMP</span></h1>
+            <p class="hero-desc">
+                Chào mừng bạn đến với thế giới sinh tồn nguyên bản, mượt mà và tự do nhất. 
+                Nơi bạn cùng bạn bè thỏa sức xây dựng đế chế riêng của mình 24/7!
+            </p>
+            
+            <!-- Connection IP Widget -->
+            <div class="ip-container">
+                <div class="ip-label">IP KẾT NỐI SERVER:</div>
+                <div class="ip-box" id="ip-box" title="Click để sao chép IP!">
+                    <span class="ip-text" id="ip-address">wrought-whiff.gl.joinmc.link</span>
+                    <button class="ip-copy-btn" id="copy-btn">
+                        <i class="fa-solid fa-copy"></i> Sao chép
+                    </button>
+                </div>
+                <div class="ip-copied-popup" id="copied-popup">Đã sao chép vào Clipboard!</div>
+            </div>
+        </div>
+        <a href="#status" class="scroll-indicator">
+            <span>Cuộn xuống khám phá</span>
+            <i class="fa-solid fa-chevron-down"></i>
+        </a>
+    </section>
+
+    <!-- Live Telemetry Section -->
+    <section id="status" class="status-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Trạng Thái <span class="glow-text">Thời Gian Thực</span></h2>
+                <p class="section-subtitle">Dữ liệu telemetry trực tiếp được kết nối trực tiếp với server game</p>
+            </div>
+
+            <div class="status-grid">
+                <!-- Status Card -->
+                <div class="status-card glass" id="card-status">
+                    <div class="card-icon status-icon-pulse">
+                        <i class="fa-solid fa-circle-dot"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3>Trạng Thái Server</h3>
+                        <p class="status-value loading" id="server-status">Đang kiểm tra...</p>
+                        <span class="status-desc" id="server-motd">Đang kết nối API...</span>
+                    </div>
+                </div>
+
+                <!-- Player Count Card -->
+                <div class="status-card glass" id="card-players">
+                    <div class="card-icon player-icon">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3>Người Chơi Trực Tuyến</h3>
+                        <p class="status-value" id="player-count"><span class="loading">...</span></p>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="player-progress" style="width: 0%"></div>
+                        </div>
+                        <span class="status-desc" id="player-peak">Đang kết nối API...</span>
+                    </div>
+                </div>
+
+                <!-- Performance Card (TPS) -->
+                <div class="status-card glass" id="card-tps">
+                    <div class="card-icon tps-icon">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3>Hiệu Năng (TPS)</h3>
+                        <p class="status-value" id="server-tps">20.00</p>
+                        <span class="tps-badge green"><i class="fa-solid fa-shield-halved"></i> Tuyệt vời</span>
+                        <span class="status-desc">Server Uptime: <strong id="server-uptime">100%</strong></span>
+                    </div>
+                </div>
+
+                <!-- Visitor Ping Card -->
+                <div class="status-card glass" id="card-ping">
+                    <div class="card-icon ping-icon" id="ping-icon-pulse">
+                        <i class="fa-solid fa-signal"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3>Kết Nối Của Bạn</h3>
+                        <p class="status-value" id="visitor-ping">Đang đo...</p>
+                        <span class="tps-badge green" id="ping-badge"><i class="fa-solid fa-gauge-high"></i> Tốt</span>
+                        <span class="status-desc">Độ trễ máy bạn đến server</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Online Player Avatar Showcase -->
+            <div class="player-showcase-container glass" id="player-showcase-box">
+                <h4><i class="fa-solid fa-sparkles"></i> Người Chơi Đang Trực Tuyến</h4>
+                <div class="player-list" id="player-list">
+                    <!-- Dynamic avatars will be injected here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Server Activities & Announcements -->
+    <section id="activities" class="activities-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Hoạt Động & <span class="glow-text">Sự Kiện</span></h2>
+                <p class="section-subtitle">Cập nhật các hoạt động nổi bật và lịch trình vận hành của máy chủ</p>
+            </div>
+
+            <div class="activities-timeline">
+                <!-- Activity 1 -->
+                <div class="timeline-item glass">
+                    <div class="timeline-dot"><i class="fa-solid fa-tree"></i></div>
+                    <div class="timeline-time">CHẾ ĐỘ CHÍNH</div>
+                    <div class="timeline-content">
+                        <h3>Survival Sinh Tồn Thuần Bản</h3>
+                        <p>
+                            Chế độ sinh tồn cốt lõi 1.20.4 nguyên bản, đề cao tính công bằng và tự do. 
+                            Không có các gói nạp VIP mất cân bằng, không pay-to-win. Tất cả mọi người chơi đều bắt đầu bình đẳng!
+                        </p>
+                        <span class="timeline-tag"><i class="fa-solid fa-star"></i> Mặc Định</span>
+                    </div>
+                </div>
+
+                <!-- Activity 2 -->
+                <div class="timeline-item glass">
+                    <div class="timeline-dot"><i class="fa-solid fa-shield-heart"></i></div>
+                    <div class="timeline-time">AN TOÀN DỮ LIỆU</div>
+                    <div class="timeline-content">
+                        <h3>Hệ Thống Tự Động Sao Lưu (Auto Backup)</h3>
+                        <p>
+                            Để đảm bảo công sức xây dựng của các thành viên không bao giờ bị mất, 
+                            máy chủ tự động sao lưu dữ liệu toàn bộ thế giới mỗi 12 tiếng một lần về ổ lưu trữ an toàn.
+                        </p>
+                        <span class="timeline-tag green"><i class="fa-solid fa-check"></i> Đang Chạy</span>
+                    </div>
+                </div>
+
+                <!-- Activity 3 -->
+                <div class="timeline-item glass">
+                    <div class="timeline-dot"><i class="fa-solid fa-trophy"></i></div>
+                    <div class="timeline-time">HẰNG TUẦN</div>
+                    <div class="timeline-content">
+                        <h3>Sự Kiện Build Contest (Thiết Kế)</h3>
+                        <p>
+                            Mỗi tuần, cộng đồng sẽ tổ chức bình chọn các công trình nhà ở, lâu đài hoặc trang trại sinh tồn đẹp mắt nhất. 
+                            Những người chiến thắng sẽ được vinh danh trực tiếp tại sảnh Spawn của server!
+                        </p>
+                        <span class="timeline-tag purple"><i class="fa-solid fa-hourglass-half"></i> Sắp diễn ra</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Server Rules Section -->
+    <section id="rules" class="rules-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Luật Lệ <span class="glow-text">Cộng Đồng</span></h2>
+                <p class="section-subtitle">Những quy tắc chung giúp xây dựng một môi trường văn minh và gắn kết</p>
+            </div>
+
+            <div class="rules-grid">
+                <!-- Rule 1 -->
+                <div class="rule-card glass">
+                    <div class="rule-num">01</div>
+                    <h3><i class="fa-solid fa-hand-fist"></i> Không Phá Hoại (Anti-Grief)</h3>
+                    <p>
+                        Tuyệt đối không được phá hủy, trộm cắp tài nguyên hoặc sửa đổi công trình của người chơi khác nếu không có sự đồng ý của họ.
+                    </p>
+                </div>
+
+                <!-- Rule 2 -->
+                <div class="rule-card glass">
+                    <div class="rule-num">02</div>
+                    <h3><i class="fa-solid fa-ban"></i> Không Gian Lận (No Cheating)</h3>
+                    <p>
+                        Cấm hoàn toàn việc sử dụng X-Ray, hack clients, autoclicker, hack bay hoặc các bug lỗi game để trục lợi cá nhân.
+                    </p>
+                </div>
+
+                <!-- Rule 3 -->
+                <div class="rule-card glass">
+                    <div class="rule-num">03</div>
+                    <h3><i class="fa-solid fa-comments"></i> Chat Văn Minh (Civilized Chat)</h3>
+                    <p>
+                        Hãy tôn trọng lẫn nhau. Không spam chat, không xúc phạm, dùng ngôn từ tục tĩu hoặc phân biệt đối xử trên kênh chat chung.
+                    </p>
+                </div>
+
+                <!-- Rule 4 -->
+                <div class="rule-card glass">
+                    <div class="rule-num">04</div>
+                    <h3><i class="fa-solid fa-heart"></i> Giao Dịch Lành Mạnh</h3>
+                    <p>
+                        Không thực hiện các hành vi lừa đảo (scam) vật phẩm khi trao đổi giữa người chơi. Khuyến khích ghi lại video khi giao dịch lớn.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <h3>ImDuongP SMP</h3>
+                    <p>Máy chủ sinh tồn Minecraft Survival cộng đồng văn minh, công bằng và ổn định lâu dài.</p>
+                </div>
+                <div class="footer-status">
+                    <div class="pulse-indicator-small" id="footer-pulse"></div>
+                    <span id="footer-status-text">Server Status: Checking...</span>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 ImDuongP SMP. Website được thiết kế độc quyền với hiệu năng cao và phong cách gaming tối tân.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
