@@ -703,7 +703,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Dynamic API URL state
         let apiBaseUrl = "";
-        const tunnelKey = "imduongp_smp_6bc0b48d";
+        const tunnelKey = "BoccDxTW28HejRh9QSJX1R";
         
         // Retrieve the current active Cloudflare tunnel URL from KVDB
         const fetchTunnelUrl = async () => {
