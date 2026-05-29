@@ -1036,3 +1036,216 @@ body {
         gap: 24px;
     }
 }
+
+/* --- LUCKY WHEEL (VÒNG QUAY MAY MẮN) --- */
+.spin-section {
+    padding: 120px 0;
+    background: linear-gradient(180deg, var(--bg-main) 0%, var(--bg-darker) 100%);
+}
+.spin-container {
+    padding: 45px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+.spin-layout {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 45px;
+    align-items: center;
+}
+.wheel-area {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.wheel-pointer {
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2.5rem;
+    color: var(--color-primary);
+    z-index: 10;
+    filter: drop-shadow(0 0 10px var(--color-primary-glow));
+    pointer-events: none;
+}
+.wheel-wrapper {
+    position: relative;
+    border-radius: 50%;
+    padding: 8px;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    box-shadow: 0 0 40px rgba(138, 43, 226, 0.4), inset 0 0 20px rgba(0, 0, 0, 0.5);
+    margin-bottom: 25px;
+}
+#wheel-canvas {
+    border-radius: 50%;
+    background-color: #0d0e15;
+    display: block;
+}
+.wheel-spin-btn {
+    padding: 16px 42px;
+    font-size: 1.25rem;
+    font-weight: 850;
+    letter-spacing: 2px;
+    border-radius: 50px;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    color: var(--text-white);
+    border: none;
+    box-shadow: 0 0 30px var(--color-primary-glow);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    text-transform: uppercase;
+}
+.wheel-spin-btn:hover:not(:disabled) {
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 0 45px rgba(138, 43, 226, 0.6);
+}
+.wheel-spin-btn:active:not(:disabled) {
+    transform: scale(0.98) translateY(0);
+}
+.wheel-spin-btn:disabled {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.25);
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+.spin-control {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+.spin-card {
+    padding: 30px;
+}
+.spin-card h3, .rewards-info-card h3 {
+    font-size: 1.15rem;
+    font-weight: 750;
+    color: var(--text-white);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.spin-card h3 i {
+    color: var(--color-accent);
+}
+.rewards-info-card h3 i {
+    color: var(--color-secondary);
+}
+.control-desc {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+.username-input-group {
+    position: relative;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.username-input-group i {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    transition: var(--transition-smooth);
+}
+.username-input-group input {
+    width: 100%;
+    padding: 16px 20px 16px 50px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-glass);
+    border-radius: 12px;
+    color: var(--text-white);
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+    transition: var(--transition-smooth);
+}
+.username-input-group input:focus {
+    border-color: var(--color-accent);
+    background: rgba(0, 229, 255, 0.03);
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.1);
+}
+.username-input-group input:focus + i {
+    color: var(--color-accent);
+}
+.spin-btn-group {
+    display: flex;
+    gap: 12px;
+}
+.spin-check-btn {
+    flex-grow: 1;
+    padding: 15px 24px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-white);
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+.spin-check-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+.spin-status-message {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    border-radius: 8px;
+    font-weight: 600;
+}
+.spin-status-message.success {
+    color: var(--color-secondary);
+}
+.spin-status-message.error {
+    color: #ff3366;
+}
+.spin-status-message.loading {
+    color: var(--color-accent);
+}
+
+.rewards-info-card {
+    padding: 24px 30px;
+}
+.rewards-grid-mini {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+.reward-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+.reward-color {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+@keyframes spin-icon-pulse {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.animate-spin-icon {
+    animation: spin-icon-pulse 12s linear infinite;
+    display: inline-block;
+}
+
+@media (max-width: 900px) {
+    .spin-layout {
+        grid-template-columns: 1fr;
+        gap: 35px;
+    }
+}

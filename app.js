@@ -613,4 +613,312 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Visual ping update every 1 second (smooth live feel)
     setInterval(updatePingLive, 1000);
+
+    // --- 13. LUCKY WHEEL SYSTEM ---
+    const wheelCanvas = document.getElementById('wheel-canvas');
+    const wheelSpinBtn = document.getElementById('wheel-spin-btn');
+    const spinUsername = document.getElementById('spin-username');
+    const spinCheckBtn = document.getElementById('spin-check-btn');
+    const spinStatusMessage = document.getElementById('spin-status-message');
+
+    if (wheelCanvas) {
+        const ctx = wheelCanvas.getContext('2d');
+        const slices = [
+            { text: "5,000$", value: 5000, color: "#ff3366" },
+            { text: "1,000$", value: 1000, color: "#9933ff" },
+            { text: "2,000$", value: 2000, color: "#00ffff" },
+            { text: "1,500$", value: 1500, color: "#3366ff" },
+            { text: "3,000$", value: 3000, color: "#ff9900" },
+            { text: "2,500$", value: 2500, color: "#33cc33" }
+        ];
+        
+        let startAngle = 0;
+        const numSlices = slices.length;
+        const sliceAngle = (2 * Math.PI) / numSlices;
+        
+        // Draw the wheel
+        const drawWheel = (currentAngle = 0) => {
+            const size = wheelCanvas.width;
+            const center = size / 2;
+            const radius = center - 10;
+            
+            ctx.clearRect(0, 0, size, size);
+            
+            // Draw Slices
+            for (let i = 0; i < numSlices; i++) {
+                const angle = currentAngle + i * sliceAngle;
+                
+                // Draw arc slice
+                ctx.beginPath();
+                ctx.moveTo(center, center);
+                ctx.arc(center, center, radius, angle, angle + sliceAngle);
+                ctx.closePath();
+                ctx.fillStyle = slices[i].color;
+                ctx.fill();
+                
+                // Add a subtle border to slices
+                ctx.strokeStyle = "rgba(11, 12, 16, 0.5)";
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                
+                // Draw text
+                ctx.save();
+                ctx.translate(center, center);
+                ctx.rotate(angle + sliceAngle / 2);
+                ctx.textAlign = "right";
+                ctx.fillStyle = "#ffffff";
+                // Add shadow text
+                ctx.shadowColor = "rgba(0,0,0,0.8)";
+                ctx.shadowBlur = 6;
+                ctx.font = "bold 20px 'Outfit', sans-serif";
+                ctx.fillText(slices[i].text, radius - 30, 8);
+                ctx.restore();
+            }
+            
+            // Draw outer neon border
+            ctx.beginPath();
+            ctx.arc(center, center, radius, 0, 2 * Math.PI);
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
+            ctx.lineWidth = 8;
+            ctx.stroke();
+            
+            // Draw center cap
+            ctx.beginPath();
+            ctx.arc(center, center, 28, 0, 2 * Math.PI);
+            ctx.fillStyle = "#0b0c10";
+            ctx.fill();
+            ctx.strokeStyle = "#8a2be2";
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            
+            // Neon glow inside center
+            ctx.beginPath();
+            ctx.arc(center, center, 8, 0, 2 * Math.PI);
+            ctx.fillStyle = "#00e5ff";
+            ctx.fill();
+        };
+        
+        // Initial draw
+        drawWheel(0);
+        
+        // Dynamic API URL state
+        let apiBaseUrl = "";
+        const tunnelKey = "imduongp_smp_6bc0b48d";
+        
+        // Retrieve the current active Cloudflare tunnel URL from KVDB
+        const fetchTunnelUrl = async () => {
+            try {
+                const res = await fetch(`https://kvdb.io/${tunnelKey}/tunnel_url`, { cache: 'no-store' });
+                if (res.ok) {
+                    apiBaseUrl = (await res.text()).trim();
+                    console.log("KVDB Tunnel API URL retrieved successfully: " + apiBaseUrl);
+                } else {
+                    console.warn("KVDB tunnel URL read returned status " + res.status);
+                }
+            } catch (err) {
+                console.error("Failed to read dynamic tunnel URL: ", err);
+            }
+        };
+        
+        // Fetch tunnel URL on startup
+        fetchTunnelUrl();
+        // Periodically refresh tunnel URL every 60 seconds in case server restarted
+        setInterval(fetchTunnelUrl, 60000);
+        
+        let isSpinning = false;
+        
+        // Spin verification
+        const checkSpinStatus = async () => {
+            const username = spinUsername.value.trim();
+            if (!username) {
+                showSpinMessage("Vui lòng nhập tên nhân vật!", "error");
+                return false;
+            }
+            
+            if (!apiBaseUrl) {
+                showSpinMessage("Đang kết nối tới server game... Vui lòng thử lại sau vài giây.", "loading");
+                await fetchTunnelUrl();
+                if (!apiBaseUrl) {
+                    showSpinMessage("Không thể kết nối tới server. Vui lòng đảm bảo Server Minecraft đang chạy!", "error");
+                    return false;
+                }
+            }
+            
+            showSpinMessage("Đang kiểm tra dữ liệu...", "loading");
+            spinCheckBtn.disabled = true;
+            
+            try {
+                const res = await fetch(`${apiBaseUrl}/api/status?username=${encodeURIComponent(username)}`, { cache: 'no-store' });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.success) {
+                        if (data.canSpin) {
+                            showSpinMessage("Hợp lệ! Bạn có 1 lượt quay hôm nay. Bấm QUAY!", "success");
+                            wheelSpinBtn.disabled = false;
+                            return true;
+                        } else {
+                            showSpinMessage("Tài khoản này đã nhận quà hôm nay rồi! Hãy quay lại sau 00:00.", "error");
+                            wheelSpinBtn.disabled = true;
+                            return false;
+                        }
+                    } else {
+                        showSpinMessage(data.message || "Lỗi kiểm tra trạng thái.", "error");
+                        return false;
+                    }
+                } else {
+                    showSpinMessage("Server phản hồi lỗi. Vui lòng thử lại.", "error");
+                    return false;
+                }
+            } catch (err) {
+                console.error(err);
+                showSpinMessage("Lỗi kết nối tới server. Hãy chắc chắn server game đang ONLINE!", "error");
+                return false;
+            } finally {
+                spinCheckBtn.disabled = false;
+            }
+        };
+        
+        // Helper to show message
+        const showSpinMessage = (msg, type) => {
+            spinStatusMessage.className = "spin-status-message " + type;
+            spinStatusMessage.textContent = msg;
+        };
+        
+        spinCheckBtn.addEventListener('click', checkSpinStatus);
+        
+        // CSS / JS Confetti Effect
+        const triggerConfetti = () => {
+            const confettiCount = 100;
+            const colors = ['#ff3366', '#9933ff', '#00ffff', '#33cc33', '#ff9900', '#3366ff'];
+            
+            for (let i = 0; i < confettiCount; i++) {
+                const div = document.createElement('div');
+                div.className = 'confetti-particle';
+                div.style.position = 'fixed';
+                div.style.width = Math.random() * 8 + 5 + 'px';
+                div.style.height = Math.random() * 12 + 6 + 'px';
+                div.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                div.style.left = Math.random() * 100 + 'vw';
+                div.style.top = '-10px';
+                div.style.zIndex = '9999';
+                div.style.opacity = Math.random() * 0.7 + 0.3;
+                div.style.borderRadius = '2px';
+                div.style.transform = `rotate(${Math.random() * 360}deg)`;
+                
+                document.body.appendChild(div);
+                
+                // Animate
+                const duration = Math.random() * 3 + 2; // 2s to 5s
+                const startLeft = parseFloat(div.style.left);
+                const drift = (Math.random() - 0.5) * 20; // horizontal drift
+                
+                div.animate([
+                    { top: '-10px', left: `${startLeft}vw`, transform: `rotate(0deg)` },
+                    { top: '105vh', left: `${startLeft + drift}vw`, transform: `rotate(${Math.random() * 720}deg)` }
+                ], {
+                    duration: duration * 1000,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                });
+                
+                setTimeout(() => {
+                    div.remove();
+                }, duration * 1000);
+            }
+        };
+        
+        // Spin trigger
+        wheelSpinBtn.addEventListener('click', async () => {
+            if (isSpinning) return;
+            
+            const username = spinUsername.value.trim();
+            if (!username) return;
+            
+            isSpinning = true;
+            wheelSpinBtn.disabled = true;
+            spinUsername.disabled = true;
+            spinCheckBtn.disabled = true;
+            showSpinMessage("Đang quay...", "loading");
+            
+            try {
+                const res = await fetch(`${apiBaseUrl}/api/claim`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: username }),
+                    cache: 'no-store'
+                });
+                
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.success) {
+                        const rewardValue = data.reward;
+                        // Find index of reward
+                        const targetIndex = slices.findIndex(s => s.value === rewardValue);
+                        if (targetIndex === -1) {
+                            showSpinMessage("Có lỗi xảy ra khi xác định phần thưởng.", "error");
+                            resetSpinState();
+                            return;
+                        }
+                        
+                        // Spin animation parameters
+                        // Canvas coordinates: 0 is on the right (3 o'clock position).
+                        // Pointer is at the top (12 o'clock position).
+                        // To land on a slice at the top pointer, the slice's angle must rotate to 12 o'clock (1.5 * Math.PI).
+                        // Formula: Pointer_Angle - (TargetSliceCenter)
+                        const pointerAngle = 1.5 * Math.PI;
+                        const sliceCenter = targetIndex * sliceAngle + sliceAngle / 2;
+                        const targetRot = pointerAngle - sliceCenter;
+                        
+                        // We spin e.g. 6 full rotations plus target angle
+                        const currentStart = startAngle % (2 * Math.PI);
+                        const totalSpinsAngle = 6 * 2 * Math.PI + (targetRot - currentStart);
+                        const duration = 4500; // 4.5 seconds
+                        const startTime = performance.now();
+                        
+                        const animateWheel = (timestamp) => {
+                            const elapsed = timestamp - startTime;
+                            const progress = Math.min(elapsed / duration, 1);
+                            
+                            // Cubic ease-out formula
+                            const easeProgress = 1 - Math.pow(1 - progress, 4);
+                            const currentAngle = currentStart + totalSpinsAngle * easeProgress;
+                            startAngle = currentAngle;
+                            
+                            drawWheel(currentAngle);
+                            
+                            if (progress < 1) {
+                                requestAnimationFrame(animateWheel);
+                            } else {
+                                // Spin ended
+                                showSpinMessage(`Chúc mừng ${data.username}! Bạn đã nhận được ${rewardValue.toLocaleString()}$ trực tiếp in-game!`, "success");
+                                triggerConfetti();
+                                isSpinning = false;
+                                spinUsername.disabled = false;
+                                spinCheckBtn.disabled = false;
+                            }
+                        };
+                        
+                        requestAnimationFrame(animateWheel);
+                    } else {
+                        showSpinMessage(data.message || "Lỗi khi quay thưởng.", "error");
+                        resetSpinState();
+                    }
+                } else {
+                    showSpinMessage("Lỗi hệ thống khi quay thưởng. Thử lại sau.", "error");
+                    resetSpinState();
+                }
+            } catch (err) {
+                console.error(err);
+                showSpinMessage("Lỗi kết nối tới game server. Hãy chắc chắn server đang bật!", "error");
+                resetSpinState();
+            }
+        });
+        
+        const resetSpinState = () => {
+            isSpinning = false;
+            wheelSpinBtn.disabled = false;
+            spinUsername.disabled = false;
+            spinCheckBtn.disabled = false;
+        };
+    }
 });
+

@@ -36,6 +36,7 @@
                 <li><a href="#hero" class="nav-link active"><i class="fa-solid fa-house"></i> Trang Chủ</a></li>
                 <li><a href="#status" class="nav-link"><i class="fa-solid fa-chart-line"></i> Trạng Thái</a></li>
                 <li><a href="#activities" class="nav-link"><i class="fa-solid fa-calendar-days"></i> Hoạt Động</a></li>
+                <li><a href="#spin" class="nav-link"><i class="fa-solid fa-circle-notch animate-spin-icon"></i> Vòng Quay</a></li>
                 <li><a href="#rules" class="nav-link"><i class="fa-solid fa-scale-balanced"></i> Luật Lệ</a></li>
             </ul>
             <div class="nav-burger">
@@ -195,6 +196,63 @@
                             Những người chiến thắng sẽ được vinh danh trực tiếp tại sảnh Spawn của server!
                         </p>
                         <span class="timeline-tag purple"><i class="fa-solid fa-hourglass-half"></i> Sắp diễn ra</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lucky Wheel (Vòng Quay May Mắn) Section -->
+    <section id="spin" class="spin-section">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2 class="section-title">Vòng Quay <span class="glow-text">May Mắn</span></h2>
+                <p class="section-subtitle">Mỗi ngày đăng nhập nhận 1 lượt quay miễn phí - Nhập tên và quay nhận tiền in-game!</p>
+            </div>
+
+            <div class="spin-container glass reveal">
+                <div class="spin-layout">
+                    <!-- Left Column: Wheel Canvas -->
+                    <div class="wheel-area">
+                        <div class="wheel-pointer"><i class="fa-solid fa-location-pin"></i></div>
+                        <div class="wheel-wrapper">
+                            <canvas id="wheel-canvas" width="380" height="380"></canvas>
+                        </div>
+                        <button class="wheel-spin-btn" id="wheel-spin-btn" disabled>QUAY</button>
+                    </div>
+
+                    <!-- Right Column: User Control & History -->
+                    <div class="spin-control">
+                        <div class="spin-card glass">
+                            <h3><i class="fa-solid fa-user-tag"></i> Nhận Thưởng Hàng Ngày</h3>
+                            <p class="control-desc">Chỉ cần nhập chính xác tên nhân vật (Ingame Name) trong server để nhận tiền trực tiếp vào tài khoản.</p>
+                            
+                            <div class="username-input-group">
+                                <i class="fa-solid fa-user"></i>
+                                <input type="text" id="spin-username" placeholder="Nhập tên nhân vật in-game..." autocomplete="off">
+                            </div>
+                            
+                            <div class="spin-btn-group">
+                                <button class="spin-check-btn" id="spin-check-btn">Kiểm tra lượt quay</button>
+                            </div>
+                            
+                            <div class="spin-status-message" id="spin-status-message">
+                                <!-- Dynamic status will be rendered here -->
+                            </div>
+                        </div>
+
+                        <!-- Rewards list -->
+                        <div class="rewards-info-card glass">
+                            <h3><i class="fa-solid fa-gift"></i> Danh Sách Mốc Thưởng</h3>
+                            <div class="rewards-grid-mini">
+                                <div class="reward-item"><span class="reward-color" style="background:#ff3366"></span> 5,000$ (Cực hiếm)</div>
+                                <div class="reward-item"><span class="reward-color" style="background:#ff9900"></span> 3,000$ (Hiếm)</div>
+                                <div class="reward-item"><span class="reward-color" style="background:#33cc33"></span> 2,500$</div>
+                                <div class="reward-item"><span class="reward-color" style="background:#00ffff"></span> 2,000$</div>
+                                <div class="reward-item"><span class="reward-color" style="background:#3366ff"></span> 1,500$</div>
+                                <div class="reward-item"><span class="reward-color" style="background:#9933ff"></span> 1,000$ (Mặc định)</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
