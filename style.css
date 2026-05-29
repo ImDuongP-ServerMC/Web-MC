@@ -1,6 +1,7 @@
 /* 
    ImDuongP SMP - Custom Premium Gaming Stylesheet (Refined & Ultra-Premium)
-   Style: Glassmorphism, Floating Cyber-Particles, Dynamic Cursor Glow, Glowing Gradients
+   Style: Animated Fluid Mesh Gradient, Spring Physics Custom Cyber Cursor, 
+          Frosted Glassmorphism, Elastic Pop-up Reveals (Scroll Pop-up)
 */
 
 /* --- DESIGN TOKENS --- */
@@ -69,6 +70,68 @@ body {
     padding: 0 24px;
 }
 
+/* --- ULTRA UNIQUE CUSTOM NEON CYBER CURSOR --- */
+/* Hide default browser cursor globally except on touch devices */
+@media (hover: hover) and (pointer: fine) {
+    body, a, button, [role="button"], #ip-box, .ip-box, .interactive-card, .timeline-item {
+        cursor: none !important;
+    }
+}
+
+.custom-cursor-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--color-accent);
+    border-radius: 50%;
+    position: fixed;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 10000;
+    box-shadow: 0 0 10px var(--color-accent);
+    opacity: 0;
+    transition: width 0.2s, height 0.2s, background-color 0.2s, opacity 0.5s ease;
+}
+
+.custom-cursor-circle {
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--color-primary);
+    border-radius: 50%;
+    position: fixed;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 9999;
+    box-shadow: 0 0 15px rgba(138, 43, 226, 0.2);
+    opacity: 0;
+    /* Spring lag physics are calculated in JS, transitions here are for states */
+    transition: width 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                height 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                border-color 0.3s, background-color 0.3s, box-shadow 0.3s, opacity 0.5s ease;
+}
+
+/* Hovering interactive elements states */
+.custom-cursor-circle.hover {
+    width: 56px;
+    height: 56px;
+    border-color: var(--color-secondary);
+    background-color: rgba(0, 255, 127, 0.05);
+    box-shadow: 0 0 25px rgba(0, 255, 127, 0.35);
+}
+.custom-cursor-dot.hover {
+    background-color: var(--color-secondary);
+    width: 4px;
+    height: 4px;
+}
+
+/* Clicking states */
+.custom-cursor-circle.click {
+    width: 20px;
+    height: 20px;
+    border-color: var(--color-accent);
+    background-color: rgba(0, 229, 255, 0.15);
+    box-shadow: 0 0 15px var(--color-accent-glow);
+}
+
 /* --- DYNAMIC AMBIENT BACKDROPS --- */
 /* Mouse-tracking glowing auroral spotlight */
 .cursor-glow {
@@ -77,7 +140,7 @@ body {
     left: 0;
     width: 500px;
     height: 500px;
-    background: radial-gradient(circle, rgba(138, 43, 226, 0.15) 0%, rgba(0, 229, 255, 0.05) 30%, rgba(3, 3, 7, 0) 70%);
+    background: radial-gradient(circle, rgba(138, 43, 226, 0.12) 0%, rgba(0, 229, 255, 0.04) 30%, rgba(3, 3, 7, 0) 70%);
     pointer-events: none;
     transform: translate(-50%, -50%);
     z-index: -1;
@@ -140,15 +203,16 @@ body {
     filter: drop-shadow(0 2px 10px rgba(168, 85, 247, 0.35));
 }
 
-/* Scroll-based Fade In Reveal animations */
+/* ELASTIC POP-UP REVEAL ANIMATIONS (SCROLL POP-UP) */
 .reveal {
     opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: scale(0.85) translateY(50px);
+    /* Uses an elastic cubic bezier curve for an extremely premium bounce effect */
+    transition: opacity 1.1s cubic-bezier(0.34, 1.56, 0.64, 1), transform 1.1s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .reveal.active {
     opacity: 1;
-    transform: translateY(0);
+    transform: scale(1) translateY(0);
 }
 
 .section-header {
@@ -244,7 +308,7 @@ body {
     transition: var(--transition-smooth);
 }
 
-/* --- HERO SECTION --- */
+/* --- HERO SECTION WITH ANIMATED FLUID MESH GRADIENT --- */
 .hero-section {
     position: relative;
     width: 100%;
@@ -254,17 +318,37 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: url('assets/smp_hero_bg.png') no-repeat center center/cover;
+    /* High-end animated fluid mesh gradient background */
+    background: radial-gradient(circle at 10% 20%, rgba(138, 43, 226, 0.18) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 229, 255, 0.15) 0%, transparent 45%),
+                radial-gradient(circle at 50% 10%, rgba(0, 255, 127, 0.08) 0%, transparent 35%),
+                #030307;
+    background-size: 200% 200%;
+    animation: meshGradient 16s ease infinite alternate;
     text-align: center;
     padding: 0 24px;
+    overflow: hidden;
 }
+
+@keyframes meshGradient {
+    0% {
+        background-position: 0% 0%;
+    }
+    50% {
+        background-position: 100% 100%;
+    }
+    100% {
+        background-position: 50% 0%;
+    }
+}
+
 .hero-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, rgba(3, 3, 7, 0.15) 0%, rgba(3, 3, 7, 0.98) 85%);
+    background: radial-gradient(circle, rgba(3, 3, 7, 0.1) 0%, rgba(3, 3, 7, 0.98) 85%);
     z-index: 1;
 }
 .hero-content {
@@ -327,7 +411,7 @@ body {
     border: 1px solid rgba(138, 43, 226, 0.45);
     border-radius: 16px;
     padding: 8px 8px 8px 24px;
-    cursor: pointer;
+    cursor: none;
     box-shadow: 0 0 40px rgba(138, 43, 226, 0.2);
     transition: var(--transition-smooth);
 }
@@ -352,7 +436,7 @@ body {
     padding: 12px 22px;
     font-weight: 700;
     font-size: 1rem;
-    cursor: pointer;
+    cursor: none;
     transition: var(--transition-smooth);
     display: flex;
     align-items: center;
@@ -494,7 +578,7 @@ body {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    min-width: 0; /* allows text truncation inside flex child */
+    min-width: 0;
 }
 .card-info h3 {
     font-size: 0.95rem;
@@ -567,6 +651,15 @@ body {
     color: var(--color-secondary);
     border: 1px solid rgba(0, 255, 127, 0.25);
     box-shadow: 0 0 10px rgba(0, 255, 127, 0.05);
+}
+
+/* Loading animations */
+.loading {
+    animation: textPulse 1.5s infinite ease-in-out;
+}
+@keyframes textPulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
 }
 
 /* --- PLAYER SHOWCASE --- */

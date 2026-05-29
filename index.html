@@ -16,7 +16,11 @@
 </head>
 <body>
 
-    <!-- Ambient Cursor Glow Effect -->
+    <!-- Dynamic Dual-Element Cyber Cursor -->
+    <div class="custom-cursor-dot" id="cursor-dot"></div>
+    <div class="custom-cursor-circle" id="cursor-circle"></div>
+
+    <!-- Ambient Cursor Light Spotlight (Stays for glow effect) -->
     <div class="cursor-glow" id="cursor-glow"></div>
     
     <!-- Floating Cyber Particles -->
@@ -42,10 +46,10 @@
         </nav>
     </header>
 
-    <!-- Hero Section -->
+    <!-- Hero Section with CSS Animated Fluid Mesh Gradient -->
     <section id="hero" class="hero-section">
         <div class="hero-overlay"></div>
-        <div class="hero-content reveal fade-bottom">
+        <div class="hero-content reveal">
             <span class="hero-tagline"><i class="fa-solid fa-gamepad"></i> MINECRAFT SURVIVAL SERVER</span>
             <h1 class="hero-title">ImDuongP <span class="glow-text">SMP</span></h1>
             <p class="hero-desc">
@@ -79,9 +83,9 @@
                 <p class="section-subtitle">Dữ liệu telemetry trực tiếp được kết nối trực tiếp với server game</p>
             </div>
 
-            <div class="status-grid reveal">
+            <div class="status-grid">
                 <!-- Status Card -->
-                <div class="status-card glass interactive-card" id="card-status">
+                <div class="status-card glass interactive-card reveal" id="card-status">
                     <div class="card-icon status-icon-pulse">
                         <i class="fa-solid fa-circle-dot"></i>
                     </div>
@@ -93,7 +97,7 @@
                 </div>
 
                 <!-- Player Count Card -->
-                <div class="status-card glass interactive-card" id="card-players">
+                <div class="status-card glass interactive-card reveal" id="card-players">
                     <div class="card-icon player-icon">
                         <i class="fa-solid fa-users"></i>
                     </div>
@@ -108,7 +112,7 @@
                 </div>
 
                 <!-- Performance Card (TPS) -->
-                <div class="status-card glass interactive-card" id="card-tps">
+                <div class="status-card glass interactive-card reveal" id="card-tps">
                     <div class="card-icon tps-icon">
                         <i class="fa-solid fa-bolt"></i>
                     </div>
@@ -121,7 +125,7 @@
                 </div>
 
                 <!-- Visitor Ping Card -->
-                <div class="status-card glass interactive-card" id="card-ping">
+                <div class="status-card glass interactive-card reveal" id="card-ping">
                     <div class="card-icon ping-icon" id="ping-icon-pulse">
                         <i class="fa-solid fa-signal"></i>
                     </div>
