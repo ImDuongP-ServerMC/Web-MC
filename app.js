@@ -74,9 +74,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const dx = mouseX - cursorX;
             const dy = mouseY - cursorY;
             
-            // 0.15 represents the stiffness/delay of the trailing effect
-            cursorX += dx * 0.15;
-            cursorY += dy * 0.15;
+            // 0.22 represents the stiffness/delay of the trailing effect (increased speed by ~1.45x)
+            cursorX += dx * 0.22;
+            cursorY += dy * 0.22;
             
             cursorCircle.style.left = `${cursorX}px`;
             cursorCircle.style.top = `${cursorY}px`;

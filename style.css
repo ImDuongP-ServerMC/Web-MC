@@ -215,6 +215,21 @@ body {
     transform: scale(1) translateY(0);
 }
 
+/* Staggered elastic reveal delays for grid children cards */
+.status-grid .reveal:nth-child(1) { transition-delay: 0.0s; }
+.status-grid .reveal:nth-child(2) { transition-delay: 0.1s; }
+.status-grid .reveal:nth-child(3) { transition-delay: 0.2s; }
+.status-grid .reveal:nth-child(4) { transition-delay: 0.3s; }
+
+.rules-grid .reveal:nth-child(1) { transition-delay: 0.0s; }
+.rules-grid .reveal:nth-child(2) { transition-delay: 0.1s; }
+.rules-grid .reveal:nth-child(3) { transition-delay: 0.2s; }
+.rules-grid .reveal:nth-child(4) { transition-delay: 0.3s; }
+
+.activities-timeline .reveal:nth-child(1) { transition-delay: 0.0s; }
+.activities-timeline .reveal:nth-child(2) { transition-delay: 0.15s; }
+.activities-timeline .reveal:nth-child(3) { transition-delay: 0.3s; }
+
 .section-header {
     text-align: center;
     margin-bottom: 70px;
