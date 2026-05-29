@@ -366,14 +366,53 @@ document.addEventListener('DOMContentLoaded', () => {
         const startTime = performance.now();
         
         try {
-            const response = await fetch(`https://api.mcstatus.io/v2/status/java/${ipAddressText}`);
+            // Primary API: mcstatus.io
+            let response = await fetch(`https://api.mcstatus.io/v2/status/java/${ipAddressText}`, {
+                cache: 'no-store',
+                headers: { 'Accept': 'application/json' }
+            });
             const endTime = performance.now();
             const rawVisitorPing = Math.round(endTime - startTime);
             
-            if (!response.ok) throw new Error('Mạng bị lỗi hoặc API giới hạn yêu cầu.');
-            const data = await response.json();
+            let data;
+            if (response.ok) {
+                data = await response.json();
+            }
             
-            if (data.online) {
+            // Fallback API: mcsrvstat.us (if primary fails or returns offline)
+            if (!data || !data.online) {
+                console.log('Primary API failed or returned offline, trying fallback...');
+                try {
+                    const fallbackResponse = await fetch(`https://api.mcsrvstat.us/3/${ipAddressText}`, {
+                        cache: 'no-store'
+                    });
+                    if (fallbackResponse.ok) {
+                        const fallbackData = await fallbackResponse.json();
+                        if (fallbackData.online) {
+                            // Normalize fallback data to match mcstatus.io format
+                            data = {
+                                online: true,
+                                players: {
+                                    online: fallbackData.players?.online || 0,
+                                    max: fallbackData.players?.max || 20,
+                                    list: fallbackData.players?.list ? fallbackData.players.list.map(p => ({
+                                        name_clean: typeof p === 'string' ? p : (p.name || 'Unknown'),
+                                        uuid: typeof p === 'string' ? '' : (p.uuid || '')
+                                    })) : []
+                                },
+                                motd: {
+                                    raw: fallbackData.motd?.raw ? fallbackData.motd.raw.join('\n') : '',
+                                    clean: fallbackData.motd?.clean ? fallbackData.motd.clean.join(' ') : 'A Minecraft Server'
+                                }
+                            };
+                        }
+                    }
+                } catch (fbErr) {
+                    console.warn('Fallback API also failed:', fbErr);
+                }
+            }
+
+            if (data && data.online) {
                 isServerOnline = true;
                 
                 serverStatus.textContent = "ONLINE";
