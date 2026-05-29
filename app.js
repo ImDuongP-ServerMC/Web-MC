@@ -359,14 +359,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // --- 10. REAL-TIME SERVER TELEMETRY & VISITOR PING (API PING) ---
+    // --- 10. REAL-TIME SERVER TELEMETRY & VISITOR PING (mcstatus.io API) ---
     const fetchServerTelemetry = async () => {
         console.log(`Pinging Minecraft server: ${ipAddressText}...`);
         
         const startTime = performance.now();
         
         try {
-            const response = await fetch(`https://api.mcsrvstat.us/2/${ipAddressText}`);
+            const response = await fetch(`https://api.mcstatus.io/v2/status/java/${ipAddressText}`);
             const endTime = performance.now();
             const rawVisitorPing = Math.round(endTime - startTime);
             
@@ -381,9 +381,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 serverStatus.style.color = 'var(--color-secondary)';
                 cardStatusIcon.className = "card-icon status-icon-pulse online";
                 
-                if (data.motd && data.motd.clean) {
-                    const rawMotd = data.motd.raw ? data.motd.raw.join(' ') : data.motd.clean.join(' ');
-                    serverMotd.innerHTML = parseMinecraftMOTD(rawMotd);
+                // mcstatus.io returns motd as { raw, clean, html }
+                if (data.motd && data.motd.raw) {
+                    serverMotd.innerHTML = parseMinecraftMOTD(data.motd.raw);
+                } else if (data.motd && data.motd.clean) {
+                    serverMotd.textContent = data.motd.clean;
                 } else {
                     serverMotd.textContent = "Chào mừng bạn đến với ImDuongP SMP!";
                 }
@@ -399,13 +401,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateVisitorPingDisplay(rawVisitorPing);
                 
                 playerList.innerHTML = '';
+                // mcstatus.io returns players.list as array of { uuid, name_raw, name_clean, name_html }
                 if (data.players.list && data.players.list.length > 0) {
                     data.players.list.forEach(player => {
+                        const playerName = player.name_clean || player.name_raw || 'Unknown';
+                        const playerUuid = player.uuid || '';
                         const playerTag = document.createElement('div');
                         playerTag.className = 'player-tag';
                         playerTag.innerHTML = `
-                            <img src="https://minotar.net/avatar/${player}/32" alt="${player}" onerror="this.src='https://minotar.net/avatar/Steeve/32'">
-                            <span>${player}</span>
+                            <img src="https://minotar.net/avatar/${playerUuid || playerName}/32" alt="${playerName}" onerror="this.src='https://minotar.net/avatar/Steve/32'">
+                            <span>${playerName}</span>
                         `;
                         playerList.appendChild(playerTag);
                     });
