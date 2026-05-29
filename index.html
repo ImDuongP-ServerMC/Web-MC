@@ -8,13 +8,19 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;850&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <!-- FontAwesome for Premium Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom Style Sheet -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+    <!-- Ambient Cursor Glow Effect -->
+    <div class="cursor-glow" id="cursor-glow"></div>
+    
+    <!-- Floating Cyber Particles -->
+    <div class="particles-container" id="particles-container"></div>
 
     <!-- Nav Bar -->
     <header class="navbar-container">
@@ -39,7 +45,7 @@
     <!-- Hero Section -->
     <section id="hero" class="hero-section">
         <div class="hero-overlay"></div>
-        <div class="hero-content">
+        <div class="hero-content reveal fade-bottom">
             <span class="hero-tagline"><i class="fa-solid fa-gamepad"></i> MINECRAFT SURVIVAL SERVER</span>
             <h1 class="hero-title">ImDuongP <span class="glow-text">SMP</span></h1>
             <p class="hero-desc">
@@ -68,14 +74,14 @@
     <!-- Live Telemetry Section -->
     <section id="status" class="status-section">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header reveal">
                 <h2 class="section-title">Trạng Thái <span class="glow-text">Thời Gian Thực</span></h2>
                 <p class="section-subtitle">Dữ liệu telemetry trực tiếp được kết nối trực tiếp với server game</p>
             </div>
 
-            <div class="status-grid">
+            <div class="status-grid reveal">
                 <!-- Status Card -->
-                <div class="status-card glass" id="card-status">
+                <div class="status-card glass interactive-card" id="card-status">
                     <div class="card-icon status-icon-pulse">
                         <i class="fa-solid fa-circle-dot"></i>
                     </div>
@@ -87,7 +93,7 @@
                 </div>
 
                 <!-- Player Count Card -->
-                <div class="status-card glass" id="card-players">
+                <div class="status-card glass interactive-card" id="card-players">
                     <div class="card-icon player-icon">
                         <i class="fa-solid fa-users"></i>
                     </div>
@@ -102,7 +108,7 @@
                 </div>
 
                 <!-- Performance Card (TPS) -->
-                <div class="status-card glass" id="card-tps">
+                <div class="status-card glass interactive-card" id="card-tps">
                     <div class="card-icon tps-icon">
                         <i class="fa-solid fa-bolt"></i>
                     </div>
@@ -115,7 +121,7 @@
                 </div>
 
                 <!-- Visitor Ping Card -->
-                <div class="status-card glass" id="card-ping">
+                <div class="status-card glass interactive-card" id="card-ping">
                     <div class="card-icon ping-icon" id="ping-icon-pulse">
                         <i class="fa-solid fa-signal"></i>
                     </div>
@@ -129,7 +135,7 @@
             </div>
 
             <!-- Online Player Avatar Showcase -->
-            <div class="player-showcase-container glass" id="player-showcase-box">
+            <div class="player-showcase-container glass reveal" id="player-showcase-box">
                 <h4><i class="fa-solid fa-sparkles"></i> Người Chơi Đang Trực Tuyến</h4>
                 <div class="player-list" id="player-list">
                     <!-- Dynamic avatars will be injected here -->
@@ -141,14 +147,14 @@
     <!-- Server Activities & Announcements -->
     <section id="activities" class="activities-section">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header reveal">
                 <h2 class="section-title">Hoạt Động & <span class="glow-text">Sự Kiện</span></h2>
                 <p class="section-subtitle">Cập nhật các hoạt động nổi bật và lịch trình vận hành của máy chủ</p>
             </div>
 
             <div class="activities-timeline">
                 <!-- Activity 1 -->
-                <div class="timeline-item glass">
+                <div class="timeline-item glass reveal">
                     <div class="timeline-dot"><i class="fa-solid fa-tree"></i></div>
                     <div class="timeline-time">CHẾ ĐỘ CHÍNH</div>
                     <div class="timeline-content">
@@ -162,7 +168,7 @@
                 </div>
 
                 <!-- Activity 2 -->
-                <div class="timeline-item glass">
+                <div class="timeline-item glass reveal">
                     <div class="timeline-dot"><i class="fa-solid fa-shield-heart"></i></div>
                     <div class="timeline-time">AN TOÀN DỮ LIỆU</div>
                     <div class="timeline-content">
@@ -176,7 +182,7 @@
                 </div>
 
                 <!-- Activity 3 -->
-                <div class="timeline-item glass">
+                <div class="timeline-item glass reveal">
                     <div class="timeline-dot"><i class="fa-solid fa-trophy"></i></div>
                     <div class="timeline-time">HẰNG TUẦN</div>
                     <div class="timeline-content">
@@ -195,14 +201,14 @@
     <!-- Server Rules Section -->
     <section id="rules" class="rules-section">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header reveal">
                 <h2 class="section-title">Luật Lệ <span class="glow-text">Cộng Đồng</span></h2>
                 <p class="section-subtitle">Những quy tắc chung giúp xây dựng một môi trường văn minh và gắn kết</p>
             </div>
 
             <div class="rules-grid">
                 <!-- Rule 1 -->
-                <div class="rule-card glass">
+                <div class="rule-card glass interactive-card reveal">
                     <div class="rule-num">01</div>
                     <h3><i class="fa-solid fa-hand-fist"></i> Không Phá Hoại (Anti-Grief)</h3>
                     <p>
@@ -211,7 +217,7 @@
                 </div>
 
                 <!-- Rule 2 -->
-                <div class="rule-card glass">
+                <div class="rule-card glass interactive-card reveal">
                     <div class="rule-num">02</div>
                     <h3><i class="fa-solid fa-ban"></i> Không Gian Lận (No Cheating)</h3>
                     <p>
@@ -220,7 +226,7 @@
                 </div>
 
                 <!-- Rule 3 -->
-                <div class="rule-card glass">
+                <div class="rule-card glass interactive-card reveal">
                     <div class="rule-num">03</div>
                     <h3><i class="fa-solid fa-comments"></i> Chat Văn Minh (Civilized Chat)</h3>
                     <p>
@@ -229,7 +235,7 @@
                 </div>
 
                 <!-- Rule 4 -->
-                <div class="rule-card glass">
+                <div class="rule-card glass interactive-card reveal">
                     <div class="rule-num">04</div>
                     <h3><i class="fa-solid fa-heart"></i> Giao Dịch Lành Mạnh</h3>
                     <p>

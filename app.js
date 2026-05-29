@@ -1,6 +1,7 @@
 /* 
-   ImDuongP SMP - Client-Side Interactive & Telemetry Script
-   Integrates with Public Minecraft API to show real-time stats
+   ImDuongP SMP - Ultra-Premium Client-Side Interactivity
+   Features: Real-time Telemetry, Minecraft MOTD Color Code Parser,
+   Ambient Mouse Glow tracking, Floating Space Particles, Scroll Reveal & 3D Tilt Card physics
 */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -26,14 +27,203 @@ document.addEventListener('DOMContentLoaded', () => {
     const footerStatusText = document.getElementById('footer-status-text');
     const footerPulse = document.getElementById('footer-pulse');
     
-    // New visitor ping elements
+    // Visitor ping elements
     const visitorPingValue = document.getElementById('visitor-ping');
     const visitorPingBadge = document.getElementById('ping-badge');
     const pingIconPulse = document.getElementById('ping-icon-pulse');
     
     let isServerOnline = false;
 
-    // --- 1. COPY TO CLIPBOARD LOGIC ---
+    // --- 1. AMBIENT MOUSE CURSOR GLOW ---
+    const cursorGlow = document.getElementById('cursor-glow');
+    
+    document.addEventListener('mousemove', (e) => {
+        // Fade in on first movement
+        if (cursorGlow.style.opacity === '0' || !cursorGlow.style.opacity) {
+            cursorGlow.style.opacity = '1';
+        }
+        
+        // Position glow centered at mouse with high-performance CSS transforms
+        cursorGlow.style.left = `${e.clientX}px`;
+        cursorGlow.style.top = `${e.clientY}px`;
+    });
+
+    document.addEventListener('mouseleave', () => {
+        cursorGlow.style.opacity = '0';
+    });
+
+    // --- 2. FLOATING CYBER-PARTICLES BACKGROUND ---
+    const particlesContainer = document.getElementById('particles-container');
+    const particleCount = 25;
+    const particles = [];
+
+    const createParticles = () => {
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            // Random size, starting coordinates, drifting speed, and opacity
+            const size = Math.random() * 5 + 3; // 3px to 8px
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            const speedX = (Math.random() - 0.5) * 0.4;
+            const speedY = (Math.random() - 0.5) * 0.4 - 0.2; // slight upward drift
+            const opacity = Math.random() * 0.4 + 0.15;
+            
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.opacity = opacity;
+            
+            particlesContainer.appendChild(particle);
+            
+            particles.push({
+                element: particle,
+                x,
+                y,
+                speedX,
+                speedY,
+                size,
+                opacity
+            });
+        }
+    };
+
+    const animateParticles = () => {
+        particles.forEach(p => {
+            p.x += p.speedX;
+            p.y += p.speedY;
+            
+            // Boundary wrapping
+            if (p.x < -p.size) p.x = window.innerWidth;
+            if (p.x > window.innerWidth) p.x = -p.size;
+            if (p.y < -p.size) p.y = window.innerHeight;
+            if (p.y > window.innerHeight) p.y = window.size;
+            
+            // High performance transform positioning
+            p.element.style.transform = `translate3d(${p.x}px, ${p.y}px, 0)`;
+        });
+        
+        requestAnimationFrame(animateParticles);
+    };
+
+    if (particlesContainer) {
+        createParticles();
+        animateParticles();
+    }
+
+    // --- 3. INTERACTIVE 3D HOLOGRAPHIC TILT EFFECT ON CARDS ---
+    const interactiveCards = document.querySelectorAll('.interactive-card');
+    
+    interactiveCards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left; // x coordinate inside element
+            const y = e.clientY - rect.top;  // y coordinate inside element
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            // Calculate tilt angle (max 10 degrees rotation)
+            const rotateX = ((centerY - y) / centerY) * 10;
+            const rotateY = ((x - centerX) / centerX) * 10;
+            
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale(1.02)`;
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            // Smoothly reset tilt state
+            card.style.transform = '';
+        });
+    });
+
+    // --- 4. SCROLL REVEAL OBSERVER ---
+    const revealElements = document.querySelectorAll('.reveal');
+    
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+                // stop observing once revealed for performance
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.15 // trigger when 15% visible
+    });
+
+    revealElements.forEach(el => {
+        revealObserver.observe(el);
+    });
+
+    // --- 5. MINECRAFT COLOR CODE PARSER ---
+    // Converts classic Minecraft (§) formatting & colors into beautiful glowing HTML spans
+    const parseMinecraftMOTD = (motdText) => {
+        if (!motdText) return "Chào mừng bạn đến với ImDuongP SMP!";
+        
+        const mcColors = {
+            '0': '#000000',
+            '1': '#0000AA',
+            '2': '#00AA00',
+            '3': '#00AAAA',
+            '4': '#AA0000',
+            '5': '#AA00AA',
+            '6': '#FFAA00', // Gold
+            '7': '#AAAAAA',
+            '8': '#555555',
+            '9': '#5555FF',
+            'a': '#55FF55', // Light Green
+            'b': '#55FFFF', // Aqua
+            'c': '#FF5555', // Light Red
+            'd': '#FF55FF', // Light Purple
+            'e': '#FFFF55', // Yellow
+            'f': '#FFFFFF'
+        };
+        
+        let htmlResult = "";
+        let currentSpans = 0;
+        let isBold = false;
+        
+        for (let i = 0; i < motdText.length; i++) {
+            if (motdText[i] === '§' && i + 1 < motdText.length) {
+                const code = motdText[i + 1].toLowerCase();
+                i++; // Skip the code character
+                
+                if (mcColors[code]) {
+                    // Close open spans of previous colors
+                    while (currentSpans > 0) {
+                        htmlResult += "</span>";
+                        currentSpans--;
+                    }
+                    
+                    const glowShadow = `text-shadow: 0 0 10px ${mcColors[code]}88;`;
+                    htmlResult += `<span style="color: ${mcColors[code]}; ${glowShadow}">`;
+                    currentSpans++;
+                } else if (code === 'l') { // Bold
+                    htmlResult += `<span style="font-weight: 800; filter: brightness(1.2);">`;
+                    currentSpans++;
+                    isBold = true;
+                } else if (code === 'r') { // Reset all
+                    while (currentSpans > 0) {
+                        htmlResult += "</span>";
+                        currentSpans--;
+                    }
+                    isBold = false;
+                }
+            } else {
+                htmlResult += motdText[i];
+            }
+        }
+        
+        // Close any trailing spans
+        while (currentSpans > 0) {
+            htmlResult += "</span>";
+            currentSpans--;
+        }
+        
+        return htmlResult;
+    };
+
+    // --- 6. COPY TO CLIPBOARD LOGIC ---
     const copyIpToClipboard = () => {
         navigator.clipboard.writeText(ipAddressText).then(() => {
             // Show custom toast notification
@@ -58,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     ipBox.addEventListener('click', copyIpToClipboard);
 
-    // --- 2. NAVBAR SCROLL EFFECT ---
+    // --- 7. NAVBAR SCROLL EFFECT ---
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
             navbarContainer.classList.add('scrolled');
@@ -86,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- 3. MOBILE MENU TOGGLE ---
+    // --- 8. MOBILE MENU TOGGLE ---
     navBurger.addEventListener('click', () => {
         navMenu.classList.toggle('active');
         navBurger.classList.toggle('toggle');
@@ -100,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- 4. REAL-TIME SERVER TELEMETRY & VISITOR PING (API PING) ---
+    // --- 9. REAL-TIME SERVER TELEMETRY & VISITOR PING (API PING) ---
     const fetchServerTelemetry = async () => {
         console.log(`Pinging Minecraft server: ${ipAddressText}...`);
         
@@ -128,9 +318,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 serverStatus.style.color = 'var(--color-secondary)';
                 cardStatusIcon.className = "card-icon status-icon-pulse online";
                 
-                // Update MOTD
+                // Update MOTD with advanced Minecraft color parser
                 if (data.motd && data.motd.clean) {
-                    serverMotd.textContent = data.motd.clean.join(' ');
+                    // Try to parse raw/clean to display colors
+                    const rawMotd = data.motd.raw ? data.motd.raw.join(' ') : data.motd.clean.join(' ');
+                    serverMotd.innerHTML = parseMinecraftMOTD(rawMotd);
                 } else {
                     serverMotd.textContent = "Chào mừng bạn đến với ImDuongP SMP!";
                 }
@@ -164,14 +356,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Check if player count is more than zero but names list is hidden (query=false)
                     if (currentPlayers > 0) {
                         playerList.innerHTML = `
-                            <div class="empty-placeholder" style="text-align:center; color:var(--text-muted); width:100%; font-family:var(--font-mono); padding:10px 0; font-size:0.95rem;">
+                            <div class="empty-placeholder" style="text-align:center; color:var(--text-muted); width:100%; font-family:var(--font-mono); padding:15px 0; font-size:0.95rem;">
                                 <i class="fa-solid fa-user-secret" style="color: var(--color-primary); margin-right: 8px;"></i> 
                                 Đang có <strong>${currentPlayers}</strong> người chơi trực tuyến ẩn danh.
                             </div>
                         `;
                     } else {
                         playerList.innerHTML = `
-                            <div class="empty-placeholder" style="text-align:center; color:var(--text-muted); width:100%; font-family:var(--font-mono); padding:10px 0; font-size:0.95rem;">
+                            <div class="empty-placeholder" style="text-align:center; color:var(--text-muted); width:100%; font-family:var(--font-mono); padding:15px 0; font-size:0.95rem;">
                                 <i class="fa-solid fa-face-smile" style="color: var(--color-accent); margin-right: 8px;"></i> 
                                 Hiện chưa có ai tham gia. Hãy là người đầu tiên!
                             </div>
@@ -252,7 +444,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Set offline message to player list
         playerList.innerHTML = `
-            <div class="empty-placeholder" style="text-align:center; color:#ff3366; width:100%; font-family:var(--font-mono); padding:10px 0; font-size:0.95rem;">
+            <div class="empty-placeholder" style="text-align:center; color:#ff3366; width:100%; font-family:var(--font-mono); padding:15px 0; font-size:0.95rem;">
                 <i class="fa-solid fa-circle-exclamation" style="margin-right: 8px;"></i> 
                 Không thể lấy dữ liệu. Máy chủ hiện đang ngoại tuyến.
             </div>
@@ -262,7 +454,7 @@ document.addEventListener('DOMContentLoaded', () => {
         footerStatusText.textContent = `Server Status: OFFLINE`;
     };
 
-    // --- 5. TPS SIMULATION / TELEMETRY DECORATOR ---
+    // --- 10. TPS SIMULATION / TELEMETRY DECORATOR ---
     // Simulates natural micro fluctuations in TPS for aesthetic authenticity
     const startTpsTelemetry = () => {
         setInterval(() => {
